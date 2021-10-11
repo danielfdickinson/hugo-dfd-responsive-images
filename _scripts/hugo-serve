@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd exampleSite && hugo server --poll 700ms -b http://localhost:8888/ -w "$@"
+exit 0

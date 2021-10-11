@@ -1,0 +1,8 @@
+#!/bin/bash
+set -o pipefail
+
+URL="$1"
+shift
+
+cd exampleSite && hugo --gc ${URL:+-b $URL} --cleanDestinationDir "$@"; RET=$?
+exit "$RET"
