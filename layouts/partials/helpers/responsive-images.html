@@ -2,30 +2,78 @@
 {{- $inWidth := .width -}}
 {{- $inHeight := .height -}}
 {{- $inAlt := .alt -}}
-{{- $inTitle := .title }}
+{{- $inTitle := .title -}}
 {{- $inDestination := .destination -}}
-{{- $inPage := .page }}
-{{- $inAddLink := .addLink }}
+{{- $inPage := .page -}}
+{{- $inLink := .link -}}
+{{- $inTarget := .target -}}
+{{- $inRel := .rel -}}
+{{- $inImageWrapper := .image_wrapper -}}
+{{- $inCaption := .caption -}}
+{{- $inAttr := .attr -}}
+{{- $inAttrLink := .attrlink -}}
+{{- $inClass := .class -}}
+{{- $inAddLink := .addLink -}}
+{{- $inNoImageWrapper := .noImageWrapper -}}
+
 {{- $destination := split $inDestination "#" }}
 {{- $fullImage := resources.Get (index $destination 0) -}}
 {{- if not $fullImage -}}
     {{- $fullImage = ($inPage.Resources.ByType "image").GetMatch (printf "*%s*" (index $destination 0)) -}}
 {{- end -}}
-{{- $responsiveImages := ($inPage.Params.responsiveImages | default $inPage.Site.Params.responsiveImages) | default true }}
-{{- $addLink := false -}}
-{{- if $inAddLink -}}
-    {{- $addLink = ($inPage.Params.linkFullImages | default $inPage.Site.Params.linkFullImages) | default false }}
-{{- end -}}
+{{- $responsiveImages := default true (default $inPage.Site.Params.imageResponsive $inPage.Params.imageResponsive) -}}
+{{- $addLink := or (($inPage.Params.imageLinkFull | default $inPage.Site.Params.imageLinkFull) | default false) $inLink -}}
 {{- $imageConversion := "" -}}
 
-{{- if $fullImage }}
+{{- $alt := "" -}}
+{{- if or $inAlt $inCaption }}
+    {{- with $inAlt -}}
+        {{- $alt = . -}}
+    {{- else -}}
+        {{- $alt = $inCaption | markdownify | plainify -}}
+    {{- end -}}
+{{- end -}}
+
+{{- $imageWrapper := $inImageWrapper -}}
+{{- $class := $inClass -}}
+{{- $caption := $inCaption -}}
+
+{{- with $inPage -}}
+    {{- $addWrapper := default .Site.Params.imageAddWrapper .Params.imageAddWrapper -}}
+    {{- if and $addWrapper (not $imageWrapper) -}}
+        {{- $imageWrapper = $addWrapper -}}
+    {{- end -}}
+
+    {{- $addClass := default .Site.Params.imageAddClass .Params.imageAddClass -}}
+    {{- if and $addClass (not $class) -}}
+        {{- $class = $addClass -}}
+    {{- end -}}
+
+    {{- $altAsCaption := default .Site.Params.imageAltAsCaption .Params.imageAltAsCaption -}}
+    {{- if and $altAsCaption (not $caption) -}}
+        {{- $caption = $inAlt -}}
+    {{- end -}}
+{{- end -}}
+
+{{- if $inNoImageWrapper -}}
+    {{- $imageWrapper = "" -}}
+{{- end -}}
+
+{{- if $imageWrapper -}}
+    {{- if $class -}}
+        {{- printf "<%s class=\"%s\">" $imageWrapper $class | safeHTML -}}
+    {{- else -}}
+        {{- printf "<%s>" $imageWrapper | safeHTML -}}
+    {{- end -}}
+{{ end -}}
+{{- if $fullImage -}}
     {{- with $inPage -}}
         {{- $imageOptions := "" -}}
-        {{- with .Params.convertImagesTo -}}
+        {{- with .Params.imageConvertTo -}}
             {{- $imageOptions = printf "%dx%d %s" $fullImage.Width $fullImage.Height . -}}
             {{- $imageConversion = printf " %s" . -}}
         {{- else -}}
-            {{- with .Site.Params.convertImagesTo -}}
+            {{- with .Site.Params.imageConvertTo -}}
                 {{- $imageOptions = printf "%dx%d %s" $fullImage.Width $fullImage.Height . -}}
                 {{- $imageConversion = printf " %s" . -}}
             {{- end -}}
@@ -43,24 +91,44 @@
         {{- if hugo.IsExtended -}}
             {{ $processableFormats = $processableFormats | append "webp" -}}
         {{- end -}}
-        {{- if in $processableFormats $fullImage.MediaType.SubType }}
+        {{- if in $processableFormats $fullImage.MediaType.SubType -}}
             {{- $fullConvertedImage := $fullImage.Resize (printf "%dx%d%s" $fullImage.Width $fullImage.Height $imageConversion) -}}
-            {{- if $addLink }}<a href="{{ $final_destination }}" target="_blank" rel="noopener noreferrer">{{ end -}}
-<img loading="lazy" srcset="{{- range $size := $sizes -}}
+            {{- if $addLink }}<a href="{{ if not $inLink}}{{ $final_destination }}{{ else }}{{ $inLink }}{{ end }}"
+            target="{{ if $inTarget }}{{ $inTarget }}{{ else }}_blank{{ end }}"
+            rel="{{ if $inRel }}{{ $inRel }}{{ else }}noopener noreferrer{{ end }}">{{- end -}}
+<img{{ if and (not $imageWrapper) $class }} class="{{ $class }}"{{ end }} loading="lazy" srcset="{{- range $size := $sizes -}}
                                 {{- if ge $fullImage.Width $size -}}
                                     {{- printf "%s %s" (($fullImage.Resize (printf "%sx%s" $size $imageConversion)).RelPermalink) (printf "%sw," $size) -}}
                                 {{- end -}}
                             {{- end -}}{{- $fullConvertedImage.RelPermalink -}}"
-            sizes="(width: 360px) 360px, (width: 480px) 480px, (width: 768px) 720px, (width: 1200px) 1080px, 60vw" src="{{ $fullConvertedImage.RelPermalink }}"
+            sizes="90vw" src="{{ $fullConvertedImage.RelPermalink }}"
             alt="{{ $inAlt }}"{{ with $inTitle }} title="{{ . }}" {{ end }}
             width="{{ $fullImage.Width }}" height="{{ $fullImage.Height }}">
         {{- if $addLink }}</a>{{- end }}
         {{- else -}}
-<img loading="lazy" src="{{ $final_destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
+<img{{ if and (not $imageWrapper) $class }} class="{{ $class }}"{{ end }} loading="lazy" src="{{ $final_destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
         {{- end -}}
     {{- else }}
-<img loading="lazy" src="{{ $final_destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
+<img{{ if and (not $imageWrapper) $class }} class="{{ $class }}"{{ end }} loading="lazy" src="{{ $final_destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
     {{- end -}}
 {{- else }}
-<img loading="lazy" src="{{ $destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
+<img{{ if and (not $imageWrapper) $class }} class="{{ $class }}"{{ end }} loading="lazy" src="{{ $destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
+{{- end -}}
+{{- if $imageWrapper -}}
+    {{- if or $inTitle $caption $inAttr -}}
+        <figcaption>
+            {{- with $inTitle -}}
+                <h2>{{ . }}</h2>
+            {{- end -}}
+            {{- if or $caption $inAttr -}}<p>
+                {{- $caption | markdownify -}}
+                {{- with $inAttrLink -}}
+                    <a href="{{ . }}">
+                {{- end -}}
+                {{- $inAttr | markdownify -}}
+                {{- if $inAttrLink }}</a>{{ end }}</p>
+            {{- end -}}
+        </figcaption>
+    {{- end -}}
+    {{- printf "</%s>" $imageWrapper | safeHTML -}}
 {{- end -}}

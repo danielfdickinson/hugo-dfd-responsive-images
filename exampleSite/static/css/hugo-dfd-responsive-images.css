@@ -1,0 +1,18 @@
+img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
+}
+
+figcaption {
+    font-style: italic;
+}
+
+.responsive-figure figcaption h2 {
+    font-size: 1rem;
+}
+
+.responsive-figure figcaption p {
+    font-size: .875rem;
+}
