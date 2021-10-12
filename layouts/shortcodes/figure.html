@@ -1,0 +1,32 @@
+<figure{{ with .Get "class" }} class="{{ . }}"{{ end }}>
+    {{- $doAddLink := true -}}
+    {{- if .Get "link" -}}
+        <a href="{{ .Get "link" }}"{{ with .Get "target" }} target="{{ . }}"{{ end }}{{ with .Get "rel" }} rel="{{ . }}"{{ end }}>
+        {{- $doAddLink = false -}}
+    {{- end -}}
+    {{- $alt := "" -}}
+    {{- if or (.Get "alt") (.Get "caption") }}
+        {{- with (.Get "alt") -}}
+            {{- $alt = . -}}
+        {{- else -}}
+            {{- $alt = (.Get "caption") | markdownify| plainify }}
+        {{- end -}}
+    {{- end -}}
+    {{ partial "helpers/responsive-images" (dict "width" (.Get "width") "height" (.Get "height") "alt" $alt "title" (.Get "title") "destination" (.Get "src") "page" .Page "addLink" $doAddLink) -}}
+    {{- if .Get "link" }}</a>{{ end -}}
+    {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") -}}
+        <figcaption>
+            {{ with (.Get "title") -}}
+                <h4>{{ . }}</h4>
+            {{- end -}}
+            {{- if or (.Get "caption") (.Get "attr") -}}<p>
+                {{- .Get "caption" | markdownify -}}
+                {{- with .Get "attrlink" }}
+                    <a href="{{ . }}">
+                {{- end -}}
+                {{- .Get "attr" | markdownify -}}
+                {{- if .Get "attrlink" }}</a>{{ end }}</p>
+            {{- end }}
+        </figcaption>
+    {{- end }}
+</figure>

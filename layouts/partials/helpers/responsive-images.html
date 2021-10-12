@@ -1,0 +1,66 @@
+{{- $ctx := . -}}
+{{- $inWidth := .width -}}
+{{- $inHeight := .height -}}
+{{- $inAlt := .alt -}}
+{{- $inTitle := .title }}
+{{- $inDestination := .destination -}}
+{{- $inPage := .page }}
+{{- $inAddLink := .addLink }}
+{{- $destination := split $inDestination "#" }}
+{{- $fullImage := resources.Get (index $destination 0) -}}
+{{- if not $fullImage -}}
+    {{- $fullImage = ($inPage.Resources.ByType "image").GetMatch (printf "*%s*" (index $destination 0)) -}}
+{{- end -}}
+{{- $responsiveImages := ($inPage.Params.responsiveImages | default $inPage.Site.Params.responsiveImages) | default true }}
+{{- $addLink := false -}}
+{{- if $inAddLink -}}
+    {{- $addLink = ($inPage.Params.linkFullImages | default $inPage.Site.Params.linkFullImages) | default false }}
+{{- end -}}
+{{- $imageConversion := "" -}}
+
+{{- if $fullImage }}
+    {{- with $inPage -}}
+        {{- $imageOptions := "" -}}
+        {{- with .Params.convertImagesTo -}}
+            {{- $imageOptions = printf "%dx%d %s" $fullImage.Width $fullImage.Height . -}}
+            {{- $imageConversion = printf " %s" . -}}
+        {{- else -}}
+            {{- with .Site.Params.convertImagesTo -}}
+                {{- $imageOptions = printf "%dx%d %s" $fullImage.Width $fullImage.Height . -}}
+                {{- $imageConversion = printf " %s" . -}}
+            {{- end -}}
+        {{- end -}}
+        {{- if ne $imageOptions "" -}}
+            {{- $fullImage = $fullImage.Resize $imageOptions -}}
+        {{- end -}}
+    {{- end -}}
+
+    {{- $final_destination := cond (isset $destination 1) (printf "%s#%s" ($fullImage.RelPermalink) (index $destination 1)) ($fullImage.RelPermalink) -}}
+
+    {{- if $responsiveImages -}}
+        {{- $sizes := (slice "360" "480" "720" "1080" "1500") -}}
+        {{- $processableFormats := (slice "jpg" "jpeg" "png" "tif" "tiff" "bmp" "gif") -}}
+        {{- if hugo.IsExtended -}}
+            {{ $processableFormats = $processableFormats | append "webp" -}}
+        {{- end -}}
+        {{- if in $processableFormats $fullImage.MediaType.SubType }}
+            {{- $fullConvertedImage := $fullImage.Resize (printf "%dx%d%s" $fullImage.Width $fullImage.Height $imageConversion) -}}
+            {{- if $addLink }}<a href="{{ $final_destination }}" target="_blank" rel="noopener noreferrer">{{ end -}}
+<img loading="lazy" srcset="{{- range $size := $sizes -}}
+                                {{- if ge $fullImage.Width $size -}}
+                                    {{- printf "%s %s" (($fullImage.Resize (printf "%sx%s" $size $imageConversion)).RelPermalink) (printf "%sw," $size) -}}
+                                {{- end -}}
+                            {{- end -}}{{- $fullConvertedImage.RelPermalink -}}"
+            sizes="(width: 360px) 360px, (width: 480px) 480px, (width: 768px) 720px, (width: 1200px) 1080px, 60vw" src="{{ $fullConvertedImage.RelPermalink }}"
+            alt="{{ $inAlt }}"{{ with $inTitle }} title="{{ . }}" {{ end }}
+            width="{{ $fullImage.Width }}" height="{{ $fullImage.Height }}">
+        {{- if $addLink }}</a>{{- end }}
+        {{- else -}}
+<img loading="lazy" src="{{ $final_destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
+        {{- end -}}
+    {{- else }}
+<img loading="lazy" src="{{ $final_destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
+    {{- end -}}
+{{- else }}
+<img loading="lazy" src="{{ $destination | safeURL }}" alt="{{ $inAlt }}" {{ with $inTitle}} title="{{ . }}" {{ end }}{{ with $inWidth }} width="{{ $inWidth }}"{{ end }}{{ with $inHeight }} height="{{ $inHeight }}"{{ end }} />
+{{- end -}}
