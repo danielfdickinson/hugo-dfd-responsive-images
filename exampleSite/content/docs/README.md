@@ -1,0 +1,9 @@
+---
+title: "Hugo DFD Resposive Images README"
+author: Daniel F. Dickinson
+categories:
+    - Documentation
+tags:
+    - HOWTO
+---
+{{< page-assets "README.md" >}}
