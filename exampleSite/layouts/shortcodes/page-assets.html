@@ -1,5 +1,0 @@
-{{- $page_asset_name := .Get 0 -}}
-{{- $page_asset := resources.Get $page_asset_name -}}
-{{- with $page_asset -}}
-    {{- $page_asset.Content | markdownify -}}
-{{- end -}}
