@@ -1,8 +1,15 @@
 #!/bin/bash
 set -o pipefail
 
-URL="$1"
+HUGO_BUILD_URL="$1"
+
+# Should only occur using Netlify CLI
+if [ -z "HUGO_BUILD_URL" ]
+then
+    HUGO_BUILD_URL="https://www.example.com/"
+fi
+
 shift
 
-cd exampleSite && hugo --gc ${URL:+-b $URL} --cleanDestinationDir "$@"; RET=$?
+cd exampleSite && hugo --gc ${HUGO_BUILD_URL:+-b $HUGO_BUILD_URL} --cleanDestinationDir "$@"; RET=$?
 exit "$RET"

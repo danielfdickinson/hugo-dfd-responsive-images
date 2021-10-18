@@ -1,8 +1,14 @@
 # DFD Responsive Images
 
+A Hugo module for creating and using responsive images wherever images are used.
+
+## Netlify Status
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/2a80fcb8-8f32-498d-ace3-563dfa1db57d/deploy-status)](https://app.netlify.com/sites/hugo-dfd-responsive-images/deploys)
 
-A Hugo module for creating and using responsive images wherever images are used.
+## Demo Site
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca>
 
 ## Features
 

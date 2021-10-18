@@ -6,4 +6,4 @@ categories:
 tags:
     - HOWTO
 ---
-{{< page-assets "README.md" >}}
+{{< page-assets "README-dfd-responsive-images.md" >}}
