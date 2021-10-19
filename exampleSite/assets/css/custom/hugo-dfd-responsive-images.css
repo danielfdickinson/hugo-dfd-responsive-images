@@ -16,3 +16,9 @@ figcaption {
 .responsive-figure figcaption p {
     font-size: .875rem;
 }
+
+.responsive-figure.fullwidth img {
+    height: auto;
+    width: 100%;
+    max-height: unset;
+}

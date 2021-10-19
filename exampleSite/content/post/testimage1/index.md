@@ -13,11 +13,15 @@ imageAddWrapper: figure
 weight: 10
 ---
 
-An image shown via Markdown:
+## Via Markdown:
 
 ![Screenshot of a web page with an aqua theme](screenshot.png)
 
 
-And this time with a figure shortcode:
+## Via figure shortcode:
 
 {{< figure class="responsive-figure" title="Figure 1: Differences between markdown figures and figure shortcode" src="screenshot.png" alt="Screenshot of a web page with an aqua theme" caption="For a figure caption can be different than alt text">}}
+
+## Via figure shortcode (fullwidth)
+
+{{< figure class="responsive-figure fullwidth" title="Figure 1: Differences between markdown figures and figure shortcode (full width)" src="screenshot.png" alt="Screenshot of a web page with an aqua theme" caption="For a figure caption can be different than alt text">}}
