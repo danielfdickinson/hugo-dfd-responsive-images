@@ -18,6 +18,11 @@
 [context.branch-deploy]
   command = "_scripts/hugo-build \"$DEPLOY_PRIME_URL\""
 
+[dev]
+  command = "_scripts/hugo-serve"
+  targetPort = 1313
+  framework = "#custom"
+
 [[plugins]]
   package = "netlify-plugin-hugo-cache-resources"
 
@@ -46,8 +51,3 @@
     removeScriptTypeAttributes = true
     removeTypeLinkTypeAttributes = true
     useShortDocType = false
-
-[dev]
-  command = "_scripts/hugo-serve"
-  targetPort = 1313
-  framework = "#custom"
