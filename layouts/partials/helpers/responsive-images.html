@@ -30,7 +30,7 @@
     {{- with $inAlt -}}
         {{- $alt = . -}}
     {{- else -}}
-        {{- $alt = $inCaption | markdownify | plainify -}}
+        {{- $alt = $inCaption | $inPage.RenderString | plainify -}}
     {{- end -}}
 {{- end -}}
 
@@ -121,11 +121,11 @@
                 <h2>{{ . }}</h2>
             {{- end -}}
             {{- if or $caption $inAttr -}}<p>
-                {{- $caption | markdownify -}}
+                {{- $caption | $inPage.RenderString -}}
                 {{- with $inAttrLink -}}
                     <a href="{{ . }}">
                 {{- end -}}
-                {{- $inAttr | markdownify -}}
+                {{- $inAttr | $inPage.RenderString -}}
                 {{- if $inAttrLink }}</a>{{ end }}</p>
             {{- end -}}
         </figcaption>
