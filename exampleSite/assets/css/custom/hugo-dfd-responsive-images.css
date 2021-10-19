@@ -1,12 +1,29 @@
-img {
+figcaption {
+    font-style: italic;
+}
+
+/* We don't specify a default height for bare img (no class or id)
+ * because doing so is not reversible in more
+ * specific elements. This is a major pain point for many projects.
+ */
+
+#via-markdown ~ p img {
     height: auto;
     width: auto;
     max-height: 50vh;
     max-width: 100%;
 }
 
-figcaption {
-    font-style: italic;
+#via-markdown ~ p span span {
+    display: block;
+    margin-top: .4em;
+}
+
+.responsive-figure img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
 }
 
 .responsive-figure figcaption h2 {
@@ -21,4 +38,42 @@ figcaption {
     height: auto;
     width: 100%;
     max-height: unset;
+}
+
+.responsive-figure-fullheight {
+    display: block;
+    margin: 0;
+    overflow: visible;
+}
+
+.responsive-figure-fullheight img {
+    box-sizing: content-box;
+    display: block;
+    height: unset;
+    width: none;
+    margin: 0;
+    max-height: none;
+    max-width: none;
+    min-height: max-content;
+    min-width: max-content;
+    overflow: visible;
+}
+
+.markdown-image-wrapper > span {
+    display: block;
+    margin-top: .4em;
+}
+
+.markdown-image-wrapper img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
+}
+
+.responsive-div img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
 }
