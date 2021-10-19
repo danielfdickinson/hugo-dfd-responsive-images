@@ -4,6 +4,7 @@ author: Daniel F. Dickinson
 date: 2021-10-15T05:57:11Z
 publishDate: 2021-10-15T05:57:11Z
 weight: 20
+description: "Daniel F. Dickinson makes his best effort to keep this site (hugo-dfd-responsive-images.wildtechgarden.ca) accessible and inclusive"
 ---
 
 ## Statement
