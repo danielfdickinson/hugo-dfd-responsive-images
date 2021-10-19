@@ -66,15 +66,32 @@ A Hugo module for creating and using responsive images wherever images are used.
 For example for the demo site we use:
 
 ```css
-img {
+figcaption {
+    font-style: italic;
+}
+
+/* We don't specify a default height for bare img (no class or id)
+ * because doing so is not reversible in more
+ * specific elements. This is a major pain point for many projects.
+ */
+
+#via-markdown ~ p img {
     height: auto;
     width: auto;
     max-height: 50vh;
     max-width: 100%;
 }
 
-figcaption {
-    font-style: italic;
+#via-markdown ~ p span span {
+    display: block;
+    margin-top: .4em;
+}
+
+.responsive-figure img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
 }
 
 .responsive-figure figcaption h2 {
@@ -84,15 +101,49 @@ figcaption {
 .responsive-figure figcaption p {
     font-size: .875rem;
 }
-```
 
-If you wanted full width images with the figure shortcode in example #2 below, you could instead use:
-
-```css
 .responsive-figure.fullwidth img {
     height: auto;
     width: 100%;
     max-height: unset;
+}
+
+.responsive-figure-fullheight {
+    display: block;
+    margin: 0;
+    overflow: visible;
+}
+
+.responsive-figure-fullheight img {
+    box-sizing: content-box;
+    display: block;
+    height: unset;
+    width: none;
+    margin: 0;
+    max-height: none;
+    max-width: none;
+    min-height: max-content;
+    min-width: max-content;
+    overflow: visible;
+}
+
+.markdown-image-wrapper > span {
+    display: block;
+    margin-top: .4em;
+}
+
+.markdown-image-wrapper img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
+}
+
+.responsive-div img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
 }
 ```
 
@@ -132,7 +183,7 @@ See [partial below](#responsive-images-partial) for the full set of parameters y
 ### Responsive Images Partial
 
 You have access to the ``helpers/responsive-images`` partial in your layouts and shortcodes.
-Not all combinations of parameters make sense. (E.g. a caption with image_wrapper other than 'figure' will results in \<figcaption> that is not inside a '\<figure>' element)
+Not all combinations of parameters make sense.
 
 ```html
 {{ partial "helpers/responsive-images" (
@@ -144,11 +195,11 @@ Not all combinations of parameters make sense. (E.g. a caption with image_wrappe
     "page" .Page (Hugo page context; it is unlikely  that you will want this to be other than .Page)
     "link" "A link in which to wrap the image"
     "target" "For link: E.g. ('_blank')"
-    "rel" "For link: E.g. ('no')"
+    "rel" "For link: E.g. ('nofollow')"
     "image_wrapper" "element in which to wrap <img> element"
-    "caption" "A <figcaption>"
-    "attr" "More <figcaption> text (but can be wrapped by a hyperlink via attrlink)"
-    "attrlink" "A hyperlink wrapped around attr in a <figcaption>"
+    "caption" "A <figcaption> if image wrapper is <figure>, <p> if there is not title, or <div> if there is a title (because title will be wrapped in an <h2>"
+    "attr" "More caption text (but can be wrapped by a hyperlink via attrlink)"
+    "attrlink" "A hyperlink wrapped around attr in the element around a caption (e.g. \<figcaption>"
     "class" "Classes (space separated string) to add to the wrapper element, or the img element if there is no image_wrapper"
     "noImageWrapper" (If true you get a bare <img> element; default for render-image render hook)
     ) 
@@ -181,3 +232,16 @@ Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = 
 #### The Result
 
 <https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage1/>
+
+### Test Image #2
+
+#### Source
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images/blob/main/exampleSite/content/post/testimage2/index.md>
+
+#### CSS
+
+Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = "webp"`` in ``config.toml``
+
+#### The Result
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage2/>
