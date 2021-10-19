@@ -9,14 +9,12 @@ tags:
 author: "Daniel F. Dickinson"
 imageLinkFull: true
 imageAltAsCaption: true
-imageAddWrapper: figure
 weight: 10
 ---
 
 ## Via Markdown:
 
 ![Screenshot of a web page with an aqua theme](screenshot.png)
-
 
 ## Via figure shortcode:
 
