@@ -3,12 +3,12 @@
 {{- $inHeight := .height -}}
 {{- $inAlt := .alt -}}
 {{- $inTitle := .title -}}
-{{- $inDestination := .destination -}}
+{{- $inDestination := .destination -}}{{- /* Image source (src="…") attribute */ -}}
 {{- $inPage := .page -}}
 {{- $inLink := .link -}}
 {{- $inTarget := .target -}}
 {{- $inRel := .rel -}}
-{{- $inImageWrapper := .image_wrapper -}}
+{{- $inImageWrapper := .imagewrapper -}}
 {{- $inCaption := .caption -}}
 {{- $inAttr := .attr -}}
 {{- $inAttrLink := .attrlink -}}
@@ -115,19 +115,32 @@
 {{- end -}}
 {{- if $imageWrapper -}}
     {{- if or $inTitle $caption $inAttr -}}
-        <figcaption>
+        {{ if (eq $imageWrapper "figure") }}<figcaption>{{ else if not $inTitle }}<span>{{ else }}<div>{{ end }}
             {{- with $inTitle -}}
                 <h2>{{ . }}</h2>
             {{- end -}}
-            {{- if or $caption $inAttr -}}<p>
-                {{- $caption | $inPage.RenderString -}}
+            {{- if or $caption $inAttr -}}<span>
+                {{- /* Can't have 'p' inside 'span' and rendering markdown sometimes results in a 'p' wrapper.
+                     * We ensure we get a 'p' (display block) so that we after we convert them we have the
+                     * expected spans (for CSS)
+                     */ -}}
+                {{- replaceRE "<(/?)p>" "<${1}span>" ($caption | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
                 {{- with $inAttrLink -}}
                     <a href="{{ . }}">
                 {{- end -}}
-                {{- $inAttr | $inPage.RenderString -}}
-                {{- if $inAttrLink }}</a>{{ end }}</p>
+                {{- replaceRE "<(/?)p>" "<${1}span>" ($inAttr | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
+                {{- if $inAttrLink }}</a>{{ end }}</span>
             {{- end -}}
-        </figcaption>
+        {{ if (eq $imageWrapper "figure") }}</figcaption>{{ else if not $inTitle }}</span>{{ else }}</div>{{ end }}
     {{- end -}}
     {{- printf "</%s>" $imageWrapper | safeHTML -}}
+{{- else -}}
+    {{- if or $caption $inAttr -}}<span>
+        {{- replaceRE "<(/?)p>" "<${1}span>" ($caption | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
+        {{- with $inAttrLink -}}
+            <a href="{{ . }}">
+        {{- end -}}
+        {{- replaceRE "<(/?)p>" "<$1{s}pan>" ($inAttr | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
+        {{- if $inAttrLink }}</a>{{ end }}</span>
+    {{- end -}}
 {{- end -}}
