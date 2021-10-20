@@ -235,31 +235,45 @@ Which you can [view on this module's demo site](https://hugo-dfd-responsive-imag
 
 Which you can [view on this module's demo site](https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage1/#via-figure-shortcode-fullwidth).
 
-See [partial below](#responsive-images-partial) for the full set of parameters you can use with the shortcode (except 'destination' is named 'src' for the shortcode).
+See [partial below](#wrapped-image) for the full set of parameters you can use with the shortcode.
 ## Advanced Usage
 
-### Responsive Images Partial
+### Responsive Images Partials
 
-You have access to the ``helpers/responsive-images`` partial in your layouts and shortcodes.
+#### Wrapped Image
+
+You have access to the ``helpers/responsive-images/wrapped-image`` partial in your layouts and shortcodes.
 Not all combinations of parameters make sense.
 
 ```html
 {{ partial "helpers/responsive-images" (
-    dict "width" 1900px
+    dict "width" 1920px
     "height" 1080px
+    "thumbnailwidth" "90px"
+    "thumbnailheight" ""
     "alt" "Screenreader text"
     "title" "Title (screenreaders and often tooltip)"
-    "destination" "Image source (usually relative to page bundle or assets)"
+    "src" "Image source (usually relative to page bundle or assets)"
     "page" .Page (Hugo page context; it is unlikely  that you will want this to be other than .Page)
     "link" "A link in which to wrap the image"
     "target" "For link: E.g. ('_blank')"
     "rel" "For link: E.g. ('nofollow')"
-    "image_wrapper" "element in which to wrap <img> element"
-    "caption" "A <figcaption> if image wrapper is <figure>, <p> if there is not title, or <div> if there is a title (because title will be wrapped in an <h2>"
+    "imagewrapper" "element in which to wrap <img> element"
+    "caption" "A <figcaption> if image wrapper is <figure>, <span> if there is no title, or <div> if there is a title (because title will be wrapped in an <h2>"
     "attr" "More caption text (but can be wrapped by a hyperlink via attrlink)"
     "attrlink" "A hyperlink wrapped around attr in the element around a caption (e.g. \<figcaption>"
     "class" "Classes (space separated string) to add to the wrapper element, or the img element if there is no image_wrapper"
     "noImageWrapper" (If true you get a bare <img> element; default for render-image render hook)
+    "imagesizes" "A slice of widths to use for the srcset"
+    "thumbnailsizes" "A slice of width to sue for thumbnail srcset"
+    "singlesize" "If true ignore srcset and *sizes; non-responsive img"
+    "convertto" "image format to which to convert (for this call only)"
+    "thumbnails" "If true generate thumbnails; if fullsize is also true use a 'picture' element to pick the set of images (thumbnails or full size, based on screen size)
+    "fullsize" "If true generate full size images; see thumbnails"
+    "sizesattr" "Overrides img (or source) 'sizes=' attribute"
+    "thumbnailsizesattr" "As with sizesattr but for thumbnails"
+    "minthumbnailviewport" "Minimum size of the viewport that is require to display thumbnails instead of full images"
+    "loading" "If set, is the 'loading=' attribute for the 'img'"
     ) 
 -}}
 

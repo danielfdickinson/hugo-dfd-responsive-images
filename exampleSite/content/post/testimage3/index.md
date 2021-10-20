@@ -20,7 +20,7 @@ no wrapper, alt as caption:
 
 ## Via figure shortcode (but \<div> as wrapper):
 
-{{< figure class="responsive-div" image_wrapper="div" title="Figure 1: Differences between markdown figures and figure shortcode" src="cappy-on-bed.jpeg" alt="Yorkshire Terrier Poodle cross (dog) curled up on a duvet and looking towards camera" caption="For a figure caption can be different than alt text">}}
+{{< figure class="responsive-div" imagewrapper="div" title="Figure 1: Differences between markdown figures and figure shortcode" src="cappy-on-bed.jpeg" alt="Yorkshire Terrier Poodle cross (dog) curled up on a duvet and looking towards camera" caption="For a figure caption can be different than alt text">}}
 
 ## Via figure shortcode (originalheight):
 

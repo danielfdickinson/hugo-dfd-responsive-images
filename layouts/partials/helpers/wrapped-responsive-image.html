@@ -97,7 +97,7 @@
         "minthumbnailviewport" $inMinThumbnailViewport
         "addclass" (eq $imageWrapper "")
     ) -}}
-    {{ partial "helpers/responsive-images/thumbnail-or-full-picture" $pictureOptions }}
+    {{ partial "helpers/libexec/responsive-images/thumbnail-or-full-picture" $pictureOptions }}
     {{- if $imageWrapper -}}
         {{- if or $inTitle $caption $inAttr -}}
             {{ if (eq $imageWrapper "figure") }}<figcaption>{{ else if not $inTitle }}<span>{{ else }}<div>{{ end }}

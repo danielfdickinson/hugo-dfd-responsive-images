@@ -1,4 +1,4 @@
-{{ partial "helpers/responsive-images/wrapped-image" (
+{{ partial "helpers/wrapped-responsive-image" (
     dict "width" (.Get "width")
     "height" (.Get "height")
     "alt" (.Get "alt")
@@ -8,7 +8,7 @@
     "link" (.Get "link")
     "target" (.Get "target")
     "rel" (.Get "rel")
-    "imagewrapper" (default "figure" (.Get "image_wrapper"))
+    "imagewrapper" (default "figure" (.Get "imagewrapper"))
     "caption" (.Get "caption")
     "attr" (.Get "attr")
     "attrlink" (.Get "attrlink")

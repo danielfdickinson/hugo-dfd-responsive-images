@@ -29,7 +29,7 @@
         {{- $fullWidth = $inWidth | default $fullImage.Width -}}
         {{- $fullHeight = $inHeight | default $fullImage.Height -}}
 
-        {{- if (partial "return-helpers/responsive-images/is-processable" $fullImage) -}}
+        {{- if (partial "helpers/lib/responsive-images/is-processable" $fullImage) -}}
 
             {{- $responsiveImages := $inPage.Params.imageResponsive | default $inPage.Site.Params.imageResponsive | default true -}}
             {{- $convertTo := $inConvertTo | default $inPage.Params.imageConvertTo | default $inPage.Site.Params.imageConvertTo -}}
@@ -57,7 +57,7 @@
             {{- if not $singleSize -}}
                 {{- $srcSetImageSizes := $imageSizes -}}
                 {{- if $responsiveImages -}}
-                    {{- $srcSet = partial "return-helpers/responsive-images/generate-srcset-slice" (
+                    {{- $srcSet = partial "helpers/lib/responsive-images/generate-srcset-slice" (
                         dict "imageSizes" $imageSizes
                         "imageConversion" $imageConversion
                         "fullImage" $fullImage

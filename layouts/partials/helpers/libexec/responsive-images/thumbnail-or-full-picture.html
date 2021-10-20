@@ -44,7 +44,7 @@
 
 {{- with $inPage -}}
     {{- if $fullSize -}}
-        {{- $fullImgMap = partial "return-helpers/responsive-images/generate-images" (
+        {{- $fullImgMap = partial "helpers/lib/responsive-images/generate-images" (
             dict "width" $inWidth
             "height" $inHeight
             "src" $inSrc
@@ -59,7 +59,7 @@
     {{- end -}}
 
     {{- if $thumbnails -}}
-        {{- $thumbnailImgMap = partial "return-helpers/responsive-images/generate-images" (
+        {{- $thumbnailImgMap = partial "helpers/lib/responsive-images/generate-images" (
             dict "width" $thumbnailWidth
             "height" $thumbnailHeight
             "src" $inSrc
@@ -112,7 +112,7 @@
                     "sizesattr" $thumbnailSizesAttr
                     "media" $thumbnailMedia
                 ) -}}
-                {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
+                {{ partial "helpers/libexec/responsive-images/source-element" $sourceOptions }}
             {{- end -}}
             {{- if and $fullSize (ne $fullImgMap.fullSrc "") -}}
                 {{ $sourceOptions := (
@@ -121,7 +121,7 @@
                     "usesrcset" (cond (ge (len $fullImgMap.srcSet) 1) true false)
                     "sizesattr" $sizesAttr
                 ) -}}
-                {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
+                {{ partial "helpers/libexec/responsive-images/source-element" $sourceOptions }}
             {{- end -}}
             {{- $class := "" -}}
         {{- end -}}
@@ -135,7 +135,7 @@
                 "usesrcset" (cond (and (not $usePicture) (ge (len $fullImgMap.srcSet) 1)) true false)
                 "class" $class
             ) -}}
-            {{ partial "helpers/responsive-images/img-element" $imgOptions }}
+            {{ partial "helpers/libexec/responsive-images/img-element" $imgOptions }}
         {{- else -}}
             {{- $imgOptions := (
                 dict "imgmap" $thumbnailImgMap
@@ -146,7 +146,7 @@
                 "usesrcset" (cond (and (not $usePicture) (ge (len $thumbnailImgMap.srcSet) 1)) true false)
                 "class" $class
             ) -}}
-            {{ partial "helpers/responsive-images/img-element" $imgOptions }}
+            {{ partial "helpers/libexec/responsive-images/img-element" $imgOptions }}
         {{- end -}}
         {{- if $usePicture -}}
             </picture>
