@@ -9,7 +9,7 @@
 {{- $inClass := .class -}}
 {{- $loading := $inLoading | default $inPage.Params.imageLoading | default $inPage.Site.Params.imageLoading }}
 <img{{ with $inClass }} class="{{ . }}"{{ end }}{{ with $loading }} loading="{{ . }}"{{ end }} src="{{ $inImgMap.finalSrc }}"
-{{- if and (ge (len $inImgMap.srcSet) 1) $inUseSrcSet -}}
+{{ if and (ge (len $inImgMap.srcSet) 1) $inUseSrcSet -}}
     srcset="{{ delimit $inImgMap.srcSet ", " }}" sizes="{{ $inSizesAttr }}"
 {{- end -}}
 {{- with $inAlt }} alt="{{ . }}"{{ end }}{{- with $inTitle }} title="{{ . }}"{{ end }}

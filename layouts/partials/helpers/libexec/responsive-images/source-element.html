@@ -5,6 +5,6 @@
 {{- $inSizesAttr := .sizesattr -}}
 {{- $inMedia := .media -}}
 <source src="{{ $inImgMap.finalSrc }}" media="{{ $inMedia }}"
-{{- if and (ge (len $inImgMap.srcSet) 1) $inUseSrcSet -}}
+{{ if and (ge (len $inImgMap.srcSet) 1) $inUseSrcSet -}}
     srcset="{{ delimit $inImgMap.srcSet ", " }}" sizes="{{ $inSizesAttr }}"
 {{- end -}}>
