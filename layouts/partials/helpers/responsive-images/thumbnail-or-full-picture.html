@@ -40,7 +40,6 @@
 {{- $thumbnails := $inDoThumbnails | default $inPage.Params.imageThumbnails | default $inPage.Site.Params.imageThumbnails | default false -}}
 {{- $fullSize := $inDoFullSize | default $inPage.Params.imageFullSize | default $inPage.Site.Params.imageFullSize | default true -}}
 {{- $minThumbnailViewport := $inMinThumbnailViewport | default $inPage.Params.imageThumbnailViewport | default $inPage.Site.Params.imageThumbnailViewport | default "768px" -}}
-{{- $fullMedia := printf "(max-width: %s)" $minThumbnailViewport -}}
 {{- $thumbnailMedia := printf "(min-width: %s)" $minThumbnailViewport -}}
 
 {{- with $inPage -}}
@@ -105,16 +104,6 @@
         {{- end -}}
         {{- if $usePicture -}}
             <picture{{ with $class }} class="{{ . }}"{{ end }}>
-            {{- if and $fullSize (ne $fullImgMap.fullSrc "") -}}
-                {{ $sourceOptions := (
-                    dict "imgmap" $fullImgMap
-                    "page" $inPage
-                    "usesrcset" (cond (ge (len $fullImgMap.srcSet) 1) true false)
-                    "sizesattr" $sizesAttr
-                    "media" $fullMedia
-                ) -}}
-                {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
-            {{- end -}}
             {{- if and $thumbnails (ne $thumbnailImgMap.fullSrc "") -}}
                 {{ $sourceOptions := (
                     dict "imgmap" $thumbnailImgMap
@@ -122,6 +111,15 @@
                     "usesrcset" (cond (ge (len $thumbnailImgMap.srcSet) 1) true false)
                     "sizesattr" $thumbnailSizesAttr
                     "media" $thumbnailMedia
+                ) -}}
+                {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
+            {{- end -}}
+            {{- if and $fullSize (ne $fullImgMap.fullSrc "") -}}
+                {{ $sourceOptions := (
+                    dict "imgmap" $fullImgMap
+                    "page" $inPage
+                    "usesrcset" (cond (ge (len $fullImgMap.srcSet) 1) true false)
+                    "sizesattr" $sizesAttr
                 ) -}}
                 {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
             {{- end -}}

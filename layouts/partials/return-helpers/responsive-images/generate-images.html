@@ -42,10 +42,10 @@
             {{- end -}}
 
             {{- $imageConversion := "" -}}
-            {{- $imageOptions := printf "%dx%d" $fullWidth $fullHeight -}}
+            {{- $imageOptions := printf "%dx%d" (int $fullWidth) (int $fullHeight) -}}
 
             {{- with $convertTo -}}
-                {{- $imageOptions = printf "%dx%d %s" $fullWidth $fullHeight . -}}
+                {{- $imageOptions = printf "%dx%d %s" (int $fullWidth) (int $fullHeight) . -}}
                 {{- $imageConversion = printf " %s" . -}}
             {{- end -}}
 
