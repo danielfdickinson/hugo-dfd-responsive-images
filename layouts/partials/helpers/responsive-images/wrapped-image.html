@@ -1,0 +1,125 @@
+{{- $ctx := . -}}
+{{- $inWidth := .width -}}
+{{- $inHeight := .height -}}
+{{- $inAlt := .alt -}}
+{{- $inTitle := .title -}}
+{{- $inDestination := .destination -}}{{- /* Image source (src="…") attribute */ -}}
+{{- $inPage := .page -}}
+{{- $inLink := .link -}}
+{{- $inTarget := .target -}}
+{{- $inRel := .rel -}}
+{{- $inImageWrapper := .imagewrapper -}}
+{{- $inCaption := .caption -}}
+{{- $inAttr := .attr -}}
+{{- $inAttrLink := .attrlink -}}
+{{- $inClass := .class -}}
+{{- $inNoImageWrapper := .noImageWrapper -}}
+{{- $inImageSizes := .imagesizes -}}
+{{- $inThumbnailSizes := .thumbnailsizes -}}
+{{- $inSingleSize := .singlesize -}}
+{{- $inConvertTo := .convertto -}}
+{{- $inDoThumbnails := .thumbnails -}}
+{{- $inSizesAttr := .sizesattr -}}
+
+{{- $imgMap := partial "return-helpers/responsive-images/generate-images" (
+    dict "width" $inWidth
+    "height" $inHeight
+    "src" $inDestination
+    "page" $inPage
+    "imagesizes" $inImageSizes
+    "thumbnailsizes" $inThumbnailSizes
+    "singlesize" $inSingleSize
+    "convertto" $inConvertTo
+    "dothumbnails" $inDoThumbnails
+) -}}
+
+{{- with $imgMap -}}
+    {{- with $inPage -}}
+        {{- $addLink := or (.Params.imageLinkFull | default .Site.Params.imageLinkFull | default false) $inLink -}}
+
+        {{- $alt := "" -}}
+        {{- if or $inAlt $inCaption }}
+            {{- with $inAlt -}}
+                {{- $alt = . -}}
+            {{- else -}}
+                {{- $alt = $inCaption | .RenderString | plainify -}}
+            {{- end -}}
+        {{- end -}}
+
+        {{- $imageWrapper := $inImageWrapper -}}
+        {{- $class := $inClass -}}
+        {{- $caption := $inCaption -}}
+
+        {{- $addWrapper := .Params.imageAddWrapper | default .Site.Params.imageAddWrapper -}}
+        {{- if and $addWrapper (not $imageWrapper) -}}
+            {{- $imageWrapper = $addWrapper -}}
+        {{- end -}}
+
+        {{- $addClass := .Params.imageAddClass | default .Site.Params.imageAddClass -}}
+        {{- if and $addClass (not $class) -}}
+            {{- $class = $addClass -}}
+        {{- end -}}
+
+        {{- $altAsCaption := .Params.imageAltAsCaption | default .Site.Params.imageAltAsCaption -}}
+        {{- if and $altAsCaption (not $caption) -}}
+            {{- $caption = $inAlt -}}
+        {{- end -}}
+
+        {{- if $inNoImageWrapper -}}
+            {{- $imageWrapper = "" -}}
+        {{- end -}}
+
+        {{- if $imageWrapper -}}
+            {{- if $class -}}
+                {{- printf "<%s class=\"%s\">" $imageWrapper $class | safeHTML -}}
+            {{- else -}}
+                {{- printf "<%s>" $imageWrapper | safeHTML -}}
+            {{- end -}}
+        {{ end -}}
+
+        {{- $sizesAttr := $inSizesAttr | default .Params.imageSizesAttr | default .Site.Params.imageSizesAttr | default "90vw" -}}
+
+        {{- if $addLink }}<a href="{{ if not $inLink}}{{ $imgMap.finalSrc }}{{ else }}{{ $inLink }}{{ end }}"
+        target="{{ if $inTarget }}{{ $inTarget }}{{ else }}_blank{{ end }}"
+        rel="{{ if $inRel }}{{ $inRel }}{{ else }}noopener noreferrer{{ end }}">{{- end -}}
+        <img{{ if and (not $imageWrapper) $class}} class="{{ $class }}"{{ end }} loading="lazy" src="{{ $imgMap.finalSrc }}"
+        {{- if ge (len $imgMap.srcSet) 1 -}}
+            srcset="{{ delimit $imgMap.srcSet ", " }}" sizes="{{ $sizesAttr }}"
+        {{- end -}}
+        {{- with $inAlt }} alt="{{ . }}"{{ end }}{{- with $inTitle }} title="{{ . }}"{{ end }}
+        {{- with $imgMap.width }} width="{{ . }}"{{ end }}{{- with $imgMap.height }} height="{{ . }}"{{ end -}}>
+        {{- if $addLink }}</a>{{- end }}
+
+        {{- if $imageWrapper -}}
+            {{- if or $inTitle $caption $inAttr -}}
+                {{ if (eq $imageWrapper "figure") }}<figcaption>{{ else if not $inTitle }}<span>{{ else }}<div>{{ end }}
+                    {{- with $inTitle -}}
+                        <h2>{{ . }}</h2>
+                    {{- end -}}
+                    {{- if or $caption $inAttr -}}<span>
+                        {{- /* Can't have 'p' inside 'span' and rendering markdown sometimes results in a 'p' wrapper.
+                            * We ensure we get a 'p' (display block) so that we after we convert them we have the
+                            * expected spans (for CSS)
+                            */ -}}
+                        {{- replaceRE "<(/?)p>" "<${1}span>" ($caption | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
+                        {{- with $inAttrLink -}}
+                            <a href="{{ . }}">
+                        {{- end -}}
+                        {{- replaceRE "<(/?)p>" "<${1}span>" ($inAttr | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
+                        {{- if $inAttrLink }}</a>{{ end }}</span>
+                    {{- end -}}
+                {{ if (eq $imageWrapper "figure") }}</figcaption>{{ else if not $inTitle }}</span>{{ else }}</div>{{ end }}
+            {{- end -}}
+            {{- printf "</%s>" $imageWrapper | safeHTML -}}
+        {{- else -}}
+            {{- if or $caption $inAttr -}}<span>
+                {{- replaceRE "<(/?)p>" "<${1}span>" ($caption | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
+                {{- with $inAttrLink -}}
+                    <a href="{{ . }}">
+                {{- end -}}
+                {{- replaceRE "<(/?)p>" "<$1{s}pan>" ($inAttr | $inPage.RenderString (dict "display" "block")) | safeHTML -}}
+                {{- if $inAttrLink }}</a>{{ end }}</span>
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}

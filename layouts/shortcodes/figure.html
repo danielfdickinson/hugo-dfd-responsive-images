@@ -1,4 +1,4 @@
-{{ partial "helpers/responsive-images" (
+{{ partial "helpers/responsive-images/wrapped-image" (
     dict "width" (.Get "width")
     "height" (.Get "height")
     "alt" (.Get "alt")
@@ -13,5 +13,6 @@
     "attr" (.Get "attr")
     "attrlink" (.Get "attrlink")
     "class" (.Get "class")
+    "singlesize" (.Get "singlesize")
     ) 
 -}}

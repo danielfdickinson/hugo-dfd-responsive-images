@@ -1,0 +1,95 @@
+{{- /* returns a dict (map) containing the final 'src' (URL) for the full image and
+     * a (possibly empty) slice containing the elements to be used by a 'srcset' attribute
+     */ -}}
+{{- $ctx := . -}}
+{{- $inWidth := .width -}}
+{{- $inHeight := .height -}}
+{{- $inSrc := .src -}}{{- /* Image source (src="…") attribute */ -}}
+{{- $inPage := .page -}}
+{{- $inImageSizes := .imagesizes -}}
+{{- $inThumbnailSizes := .thumbnailsizes -}}
+{{- $inSingleSize := .singlesize -}}
+{{- $inConvertTo := .convertto -}}
+{{- $inDoThumbnails := .dothumbnails -}}
+
+{{- $srcSplit := split $inSrc "#" }}
+{{- $src := index $srcSplit 0 -}}
+{{- $fullImage := (($inPage.Resources.ByType "image").GetMatch (printf "*%s*" $src)) -}}
+{{- $finalSrc := "" -}}
+{{- $srcSet := (slice) -}}
+{{- $fullWidth := $inWidth -}}
+{{- $fullHeight := $inHeight -}}
+
+{{- with $inPage -}}
+    {{- if not $fullImage -}}
+        {{- $fullImage = resources.Get $src -}}
+    {{- end -}}
+
+    {{- if $fullImage -}}
+        {{- $fullConvertedImage := $fullImage -}}
+
+        {{- $fullWidth = $inWidth | default $fullImage.Width -}}
+        {{- $fullHeight = $inHeight | default $fullImage.Height -}}
+
+        {{- if (partial "return-helpers/responsive-images/is-processable" $fullImage) -}}
+
+            {{- $responsiveImages := $inPage.Params.imageResponsive | default $inPage.Site.Params.imageResponsive | default true -}}
+            {{- $thumbnails := $inDoThumbnails | default $inPage.Params.imageThumbnails | default $inPage.Site.Params.imageThumbnails | default false -}}
+            {{- $convertTo := $inConvertTo | default $inPage.Params.imageConvertTo | default $inPage.Site.Params.imageConvertTo -}}
+            {{- $imageSizes := $inImageSizes | default $inPage.Params.imageImageSizes | default $inPage.Site.Params.imageImageSizes | default (slice "360" "480" "720" "1080" "1500") -}}
+            {{- $thumbnailSizes := $inThumbnailSizes | default $inPage.Params.imageThumbnailSizes | default $inPage.Site.Params.imageThumbnailSizes | default (slice "90" "180" "360") -}}
+            {{- $singleSize := not $responsiveImages -}}
+            {{- if $inSingleSize -}}
+                {{- $responsiveImages = false -}}
+                {{- $singleSize = true -}}
+                {{- $imageSizes = (slice (print "%sx%s" $fullWidth $fullHeight)) -}}
+                {{- $thumbnails = false -}}
+            {{- end -}}
+
+            {{- $imageConversion := "" -}}
+            {{- $imageOptions := printf "%dx%d" $fullWidth $fullHeight -}}
+
+            {{- with $convertTo -}}
+                {{- $imageOptions = printf "%dx%d %s" $fullWidth $fullHeight . -}}
+                {{- $imageConversion = printf " %s" . -}}
+            {{- end -}}
+
+            {{- if or (ne $fullImage.Width $fullWidth) (ne $fullImage.Height $fullHeight) $convertTo -}}
+                {{- $fullConvertedImage = $fullImage.Resize $imageOptions -}}
+            {{- end -}}
+
+            {{- $finalSrc = cond (isset $srcSplit 1) (printf "%s#%s" ($fullConvertedImage.RelPermalink) (index $srcSplit 1)) ($fullConvertedImage.RelPermalink) -}}
+            {{- if not $singleSize -}}
+                {{- $srcSetImageSizes := $imageSizes -}}
+                {{- if not $responsiveImages -}}
+                    {{- if $thumbnails -}}
+                        {{- $srcSetImageSizes = $thumbnailSizes -}}
+                    {{- end -}}
+                {{- else -}}
+                    {{- if $thumbnails -}}
+                        {{- $srcSetImageSizes = $srcSetImageSizes | append $thumbnailSizes -}}
+                    {{- end -}}
+                {{- end -}}
+                {{- if or $responsiveImages $thumbnails -}}
+                    {{- $srcSet = partial "return-helpers/responsive-images/generate-srcset-slice" (
+                        dict "imageSizes" $imageSizes
+                        "imageConversion" $imageConversion
+                        "fullImage" $fullImage
+                        "fullConvertedImage" $fullConvertedImage
+                    ) -}}
+                {{- end -}}
+            {{- end -}}
+        {{- else -}}{{- /* Is an image but not of a processable format */ -}}
+            {{- $finalSrc = cond (isset $srcSplit 1) (printf "%s#%s" ($fullImage.RelPermalink) (index $srcSplit 1)) ($fullImage.RelPermalink) -}}
+        {{- end -}}
+    {{- else -}}{{- /* Is not a known image format for Hugo */ -}}
+        {{- $finalSrc = $inSrc -}}
+    {{- end -}}
+{{- end -}}
+{{- $retMap := (
+    dict "finalSrc" $finalSrc
+    "srcSet" $srcSet
+    "width" $fullWidth
+    "height" $fullHeight
+    ) -}}
+{{- return $retMap -}}
