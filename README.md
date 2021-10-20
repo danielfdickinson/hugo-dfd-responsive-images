@@ -108,13 +108,13 @@ figcaption {
     max-height: unset;
 }
 
-.responsive-figure-fullheight {
+.responsive-figure-originalheight {
     display: block;
     margin: 0;
     overflow: visible;
 }
 
-.responsive-figure-fullheight img {
+.responsive-figure-originalheight img {
     box-sizing: content-box;
     display: block;
     height: unset;
