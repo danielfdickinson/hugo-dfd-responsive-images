@@ -7,10 +7,8 @@
 {{- $inSrc := .src -}}{{- /* Image source (src="…") attribute */ -}}
 {{- $inPage := .page -}}
 {{- $inImageSizes := .imagesizes -}}
-{{- $inThumbnailSizes := .thumbnailsizes -}}
 {{- $inSingleSize := .singlesize -}}
 {{- $inConvertTo := .convertto -}}
-{{- $inDoThumbnails := .dothumbnails -}}
 
 {{- $srcSplit := split $inSrc "#" }}
 {{- $src := index $srcSplit 0 -}}
@@ -34,16 +32,13 @@
         {{- if (partial "return-helpers/responsive-images/is-processable" $fullImage) -}}
 
             {{- $responsiveImages := $inPage.Params.imageResponsive | default $inPage.Site.Params.imageResponsive | default true -}}
-            {{- $thumbnails := $inDoThumbnails | default $inPage.Params.imageThumbnails | default $inPage.Site.Params.imageThumbnails | default false -}}
             {{- $convertTo := $inConvertTo | default $inPage.Params.imageConvertTo | default $inPage.Site.Params.imageConvertTo -}}
             {{- $imageSizes := $inImageSizes | default $inPage.Params.imageImageSizes | default $inPage.Site.Params.imageImageSizes | default (slice "360" "480" "720" "1080" "1500") -}}
-            {{- $thumbnailSizes := $inThumbnailSizes | default $inPage.Params.imageThumbnailSizes | default $inPage.Site.Params.imageThumbnailSizes | default (slice "90" "180" "360") -}}
             {{- $singleSize := not $responsiveImages -}}
-            {{- if $inSingleSize -}}
+            {{- if and $inSingleSize (ne $inSingleSize false) -}}
                 {{- $responsiveImages = false -}}
                 {{- $singleSize = true -}}
                 {{- $imageSizes = (slice (print "%sx%s" $fullWidth $fullHeight)) -}}
-                {{- $thumbnails = false -}}
             {{- end -}}
 
             {{- $imageConversion := "" -}}
@@ -61,16 +56,7 @@
             {{- $finalSrc = cond (isset $srcSplit 1) (printf "%s#%s" ($fullConvertedImage.RelPermalink) (index $srcSplit 1)) ($fullConvertedImage.RelPermalink) -}}
             {{- if not $singleSize -}}
                 {{- $srcSetImageSizes := $imageSizes -}}
-                {{- if not $responsiveImages -}}
-                    {{- if $thumbnails -}}
-                        {{- $srcSetImageSizes = $thumbnailSizes -}}
-                    {{- end -}}
-                {{- else -}}
-                    {{- if $thumbnails -}}
-                        {{- $srcSetImageSizes = $srcSetImageSizes | append $thumbnailSizes -}}
-                    {{- end -}}
-                {{- end -}}
-                {{- if or $responsiveImages $thumbnails -}}
+                {{- if $responsiveImages -}}
                     {{- $srcSet = partial "return-helpers/responsive-images/generate-srcset-slice" (
                         dict "imageSizes" $imageSizes
                         "imageConversion" $imageConversion
