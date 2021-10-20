@@ -94,7 +94,8 @@
         "link" $inLink
         "target" $inTarget
         "rel" $inRel
-        "addclass" false
+        "minthumbnailviewport" $inMinThumbnailViewport
+        "addclass" (eq $imageWrapper "")
     ) -}}
     {{ partial "helpers/responsive-images/thumbnail-or-full-picture" $pictureOptions }}
     {{- if $imageWrapper -}}

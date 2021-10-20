@@ -81,8 +81,8 @@
     {{- end -}}
 
     {{- $class := $inClass -}}
-    {{- $addClass := $inAddClass | default .Params.imageAddClass | default .Site.Params.imageAddClass -}}
-    {{- if and $addClass (not $class) -}}
+    {{- $addClass := default .Params.imageAddClass | default .Site.Params.imageAddClass -}}
+    {{- if and $inAddClass (not $class) -}}
         {{- $class = $addClass -}}
     {{- end -}}
 
@@ -125,6 +125,7 @@
                 ) -}}
                 {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
             {{- end -}}
+            {{- $class := "" -}}
         {{- end -}}
         {{- if and $fullSize (ne $fullImgMap.fullSrc "") -}}
             {{- $imgOptions := (
@@ -134,6 +135,7 @@
                 "title" $inTitle
                 "loading" $inLoading
                 "usesrcset" (cond (and (not $usePicture) (ge (len $fullImgMap.srcSet) 1)) true false)
+                "class" $class
             ) -}}
             {{ partial "helpers/responsive-images/img-element" $imgOptions }}
         {{- else -}}
@@ -144,6 +146,7 @@
                 "title" $inTitle
                 "loading" $inLoading
                 "usesrcset" (cond (and (not $usePicture) (ge (len $thumbnailImgMap.srcSet) 1)) true false)
+                "class" $class
             ) -}}
             {{ partial "helpers/responsive-images/img-element" $imgOptions }}
         {{- end -}}
