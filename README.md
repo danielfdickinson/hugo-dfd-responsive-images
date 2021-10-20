@@ -17,16 +17,16 @@ A Hugo module for creating and using responsive images wherever images are used.
   * via a shortcode
 * TODO: #6 Cover images
 * TODO: #7 Microformat (e.g. OpenGraph/Twitter) support
-* TODO: #8 Thumbnails (e.g. for blog/taxonomy/HTML sitemap/etc listings)
-  * TODO: Configurable between thumbnail and full width or height image
-  * TODO: Sitewide defaults
+* Thumbnails (e.g. for blog/taxonomy/HTML sitemap/etc listings)
+  * Configurable between thumbnail and full width or height image
+  * Sitewide defaults
   * TODO: Configurable per list page
   * TODO: Configurable per listed page
 * Fallback for non-resource images
 * Image conversion (e.g. to webp)
 * Allow adding a wrapping link to original size image 
   * (optionally original format image)
-* TODO: Configurable responsive behaviour (sizes attribute and sizes of images)
+* Configurable responsive behaviour (sizes attribute and sizes of images)
 * Allow disabling responsive (autoselection of differently sized) images
 
 ## Basic Usage
@@ -87,6 +87,11 @@ figcaption {
     margin-top: .4em;
 }
 
+.responsive-thumbnail {
+    display: inline-block;
+    margin-right: 1em;
+}
+
 .responsive-figure img {
     height: auto;
     width: auto;
@@ -144,6 +149,59 @@ figcaption {
     width: auto;
     max-height: 50vh;
     max-width: 100%;
+}
+
+.responsive-markdown img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
+}
+
+#markdown-thumbnail-test ~ p {
+    display: inline-block;
+    margin-right: 1em;
+}   
+
+.thumbnail-markdown {
+    display: inline-block;
+}
+
+.thumbnail-markdown span span {
+    display: none;
+}
+
+.thumbnail-figure figcaption {
+    display: none;
+}
+
+.thumbnail-figure {
+    display: inline-block;
+    margin-right: 1em;
+}
+
+@media screen and (max-width: 768px) {
+    #markdown-thumbnail-test ~ p {
+        display: block;
+        margin-right: revert;
+    }   
+
+    .thumbnail-markdown {
+        display: revert;
+    }
+
+    .thumbnail-markdown span span {
+        display: block;
+    }
+
+    .thumbnail-figure figcaption {
+        display: block;
+    }
+
+    .thumbnail-figure {
+        display: block;
+        margin-right: revert;
+    }
 }
 ```
 
@@ -245,3 +303,42 @@ Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = 
 #### The Result
 
 <https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage2/>
+
+### Test Image #3
+
+#### Source
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images/blob/main/exampleSite/content/post/testimage3/index.md>
+
+#### CSS
+
+Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = "webp"`` in ``config.toml``
+
+#### The Result
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage3/>
+
+### Test Thumbnails #1
+
+#### Source
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images/blob/main/exampleSite/content/post/test-thumbnails-1/index.md>
+
+#### CSS
+
+Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = "webp"`` in ``config.toml``
+
+#### The Result
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca/post/test-thumbnails-1/>
+
+### Test Thumbnails #2
+
+#### Source
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images/blob/main/exampleSite/content/post/test-thumbnails-2/index.md>
+
+#### CSS
+
+Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = "webp"`` in ``config.toml``
+
+#### The Result
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca/post/test-thumbnails-2/>

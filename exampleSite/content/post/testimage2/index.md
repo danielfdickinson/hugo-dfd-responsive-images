@@ -11,7 +11,7 @@ imageLinkFull: true
 imageAltAsCaption: true
 imageAddWrapper: span
 imageAddClass: markdown-image-wrapper
-weight: 10
+weight: 20
 ---
 
 ## Via Markdown
