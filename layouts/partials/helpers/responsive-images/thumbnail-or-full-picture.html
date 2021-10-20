@@ -99,26 +99,32 @@
             target="{{ if $inTarget }}{{ $inTarget }}{{ else }}_blank{{ end }}"
             rel="{{ if $inRel }}{{ $inRel }}{{ else }}noopener noreferrer{{ end }}">{{- end -}}
         {{- end -}}
-        <picture{{ with $class }} class="{{ . }}"{{ end }}>
-        {{- if and $fullSize (ne $fullImgMap.fullSrc "") -}}
-            {{ $sourceOptions := (
-                dict "imgmap" $fullImgMap
-                "page" $inPage
-                "usesrcset" (cond (ge (len $fullImgMap.srcSet) 1) true false)
-                "sizesattr" $sizesAttr
-                "media" $fullMedia
-            ) -}}
-            {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
+        {{- $usePicture := false -}}
+        {{- if (and (ne $fullImgMap.fullSrc "") (ne $thumbnailImgMap.fullSrc "")) -}}
+            {{- $usePicture = true -}}
         {{- end -}}
-        {{- if and $thumbnails (ne $thumbnailImgMap.fullSrc "") -}}
-            {{ $sourceOptions := (
-                dict "imgmap" $thumbnailImgMap
-                "page" $inPage
-                "usesrcset" (cond (ge (len $thumbnailImgMap.srcSet) 1) true false)
-                "sizesattr" $thumbnailSizesAttr
-                "media" $thumbnailMedia
-            ) -}}
-            {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
+        {{- if $usePicture -}}
+            <picture{{ with $class }} class="{{ . }}"{{ end }}>
+            {{- if and $fullSize (ne $fullImgMap.fullSrc "") -}}
+                {{ $sourceOptions := (
+                    dict "imgmap" $fullImgMap
+                    "page" $inPage
+                    "usesrcset" (cond (ge (len $fullImgMap.srcSet) 1) true false)
+                    "sizesattr" $sizesAttr
+                    "media" $fullMedia
+                ) -}}
+                {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
+            {{- end -}}
+            {{- if and $thumbnails (ne $thumbnailImgMap.fullSrc "") -}}
+                {{ $sourceOptions := (
+                    dict "imgmap" $thumbnailImgMap
+                    "page" $inPage
+                    "usesrcset" (cond (ge (len $thumbnailImgMap.srcSet) 1) true false)
+                    "sizesattr" $thumbnailSizesAttr
+                    "media" $thumbnailMedia
+                ) -}}
+                {{ partial "helpers/responsive-images/source-element" $sourceOptions }}
+            {{- end -}}
         {{- end -}}
         {{- if and $fullSize (ne $fullImgMap.fullSrc "") -}}
             {{- $imgOptions := (
@@ -127,6 +133,7 @@
                 "alt" $alt
                 "title" $inTitle
                 "loading" $inLoading
+                "usesrcset" (cond (and (not $usePicture) (ge (len $fullImgMap.srcSet) 1)) true false)
             ) -}}
             {{ partial "helpers/responsive-images/img-element" $imgOptions }}
         {{- else -}}
@@ -136,10 +143,13 @@
                 "alt" $alt
                 "title" $inTitle
                 "loading" $inLoading
+                "usesrcset" (cond (and (not $usePicture) (ge (len $thumbnailImgMap.srcSet) 1)) true false)
             ) -}}
             {{ partial "helpers/responsive-images/img-element" $imgOptions }}
         {{- end -}}
-        </picture>
+        {{- if $usePicture -}}
+            </picture>
+        {{- end -}}
         {{- if $inAddLink }}</a>{{- end }}
     {{- end -}}
 {{- end -}}
