@@ -17,16 +17,16 @@ A Hugo module for creating and using responsive images wherever images are used.
   * via a shortcode
 * TODO: #6 Cover images
 * TODO: #7 Microformat (e.g. OpenGraph/Twitter) support
-* TODO: #8 Thumbnails (e.g. for blog/taxonomy/HTML sitemap/etc listings)
-  * TODO: Configurable between thumbnail and full width or height image
-  * TODO: Sitewide defaults
+* Thumbnails (e.g. for blog/taxonomy/HTML sitemap/etc listings)
+  * Configurable between thumbnail and full width or height image
+  * Sitewide defaults
   * TODO: Configurable per list page
   * TODO: Configurable per listed page
 * Fallback for non-resource images
 * Image conversion (e.g. to webp)
 * Allow adding a wrapping link to original size image 
   * (optionally original format image)
-* TODO: Configurable responsive behaviour (sizes attribute and sizes of images)
+* Configurable responsive behaviour (sizes attribute and sizes of images)
 * Allow disabling responsive (autoselection of differently sized) images
 
 ## Basic Usage
@@ -87,6 +87,11 @@ figcaption {
     margin-top: .4em;
 }
 
+.responsive-thumbnail {
+    display: inline-block;
+    margin-right: 1em;
+}
+
 .responsive-figure img {
     height: auto;
     width: auto;
@@ -108,13 +113,13 @@ figcaption {
     max-height: unset;
 }
 
-.responsive-figure-fullheight {
+.responsive-figure-originalheight {
     display: block;
     margin: 0;
     overflow: visible;
 }
 
-.responsive-figure-fullheight img {
+.responsive-figure-originalheight img {
     box-sizing: content-box;
     display: block;
     height: unset;
@@ -144,6 +149,59 @@ figcaption {
     width: auto;
     max-height: 50vh;
     max-width: 100%;
+}
+
+.responsive-markdown img {
+    height: auto;
+    width: auto;
+    max-height: 50vh;
+    max-width: 100%;
+}
+
+#markdown-thumbnail-test ~ p {
+    display: inline-block;
+    margin-right: 1em;
+}   
+
+.thumbnail-markdown {
+    display: inline-block;
+}
+
+.thumbnail-markdown span span {
+    display: none;
+}
+
+.thumbnail-figure figcaption {
+    display: none;
+}
+
+.thumbnail-figure {
+    display: inline-block;
+    margin-right: 1em;
+}
+
+@media screen and (max-width: 768px) {
+    #markdown-thumbnail-test ~ p {
+        display: block;
+        margin-right: revert;
+    }   
+
+    .thumbnail-markdown {
+        display: revert;
+    }
+
+    .thumbnail-markdown span span {
+        display: block;
+    }
+
+    .thumbnail-figure figcaption {
+        display: block;
+    }
+
+    .thumbnail-figure {
+        display: block;
+        margin-right: revert;
+    }
 }
 ```
 
@@ -177,31 +235,45 @@ Which you can [view on this module's demo site](https://hugo-dfd-responsive-imag
 
 Which you can [view on this module's demo site](https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage1/#via-figure-shortcode-fullwidth).
 
-See [partial below](#responsive-images-partial) for the full set of parameters you can use with the shortcode (except 'destination' is named 'src' for the shortcode).
+See [partial below](#wrapped-image) for the full set of parameters you can use with the shortcode.
 ## Advanced Usage
 
-### Responsive Images Partial
+### Responsive Images Partials
 
-You have access to the ``helpers/responsive-images`` partial in your layouts and shortcodes.
+#### Wrapped Image
+
+You have access to the ``helpers/responsive-images/wrapped-image`` partial in your layouts and shortcodes.
 Not all combinations of parameters make sense.
 
 ```html
 {{ partial "helpers/responsive-images" (
-    dict "width" 1900px
+    dict "width" 1920px
     "height" 1080px
+    "thumbnailwidth" "90px"
+    "thumbnailheight" ""
     "alt" "Screenreader text"
     "title" "Title (screenreaders and often tooltip)"
-    "destination" "Image source (usually relative to page bundle or assets)"
+    "src" "Image source (usually relative to page bundle or assets)"
     "page" .Page (Hugo page context; it is unlikely  that you will want this to be other than .Page)
     "link" "A link in which to wrap the image"
     "target" "For link: E.g. ('_blank')"
     "rel" "For link: E.g. ('nofollow')"
-    "image_wrapper" "element in which to wrap <img> element"
-    "caption" "A <figcaption> if image wrapper is <figure>, <p> if there is not title, or <div> if there is a title (because title will be wrapped in an <h2>"
+    "imagewrapper" "element in which to wrap <img> element"
+    "caption" "A <figcaption> if image wrapper is <figure>, <span> if there is no title, or <div> if there is a title (because title will be wrapped in an <h2>"
     "attr" "More caption text (but can be wrapped by a hyperlink via attrlink)"
     "attrlink" "A hyperlink wrapped around attr in the element around a caption (e.g. \<figcaption>"
     "class" "Classes (space separated string) to add to the wrapper element, or the img element if there is no image_wrapper"
     "noImageWrapper" (If true you get a bare <img> element; default for render-image render hook)
+    "imagesizes" "A slice of widths to use for the srcset"
+    "thumbnailsizes" "A slice of width to sue for thumbnail srcset"
+    "singlesize" "If true ignore srcset and *sizes; non-responsive img"
+    "convertto" "image format to which to convert (for this call only)"
+    "thumbnails" "If true generate thumbnails; if fullsize is also true use a 'picture' element to pick the set of images (thumbnails or full size, based on screen size)
+    "fullsize" "If true generate full size images; see thumbnails"
+    "sizesattr" "Overrides img (or source) 'sizes=' attribute"
+    "thumbnailsizesattr" "As with sizesattr but for thumbnails"
+    "minthumbnailviewport" "Minimum size of the viewport that is require to display thumbnails instead of full images"
+    "loading" "If set, is the 'loading=' attribute for the 'img'"
     ) 
 -}}
 
@@ -245,3 +317,42 @@ Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = 
 #### The Result
 
 <https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage2/>
+
+### Test Image #3
+
+#### Source
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images/blob/main/exampleSite/content/post/testimage3/index.md>
+
+#### CSS
+
+Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = "webp"`` in ``config.toml``
+
+#### The Result
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca/post/testimage3/>
+
+### Test Thumbnails #1
+
+#### Source
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images/blob/main/exampleSite/content/post/test-thumbnails-1/index.md>
+
+#### CSS
+
+Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = "webp"`` in ``config.toml``
+
+#### The Result
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca/post/test-thumbnails-1/>
+
+### Test Thumbnails #2
+
+#### Source
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images/blob/main/exampleSite/content/post/test-thumbnails-2/index.md>
+
+#### CSS
+
+Which uses [the above CSS](#add-css-to-style-the-images) and ``imageConvertTo = "webp"`` in ``config.toml``
+
+#### The Result
+
+<https://hugo-dfd-responsive-images.wildtechgarden.ca/post/test-thumbnails-2/>
