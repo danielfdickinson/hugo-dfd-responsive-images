@@ -1,0 +1,31 @@
+{{- $ctx := . -}}
+{{- /* TODO: #13 Move microformat data gathering into a separate module */ -}}
+{{- $dataScratch := newScratch -}}
+{{- $dataToGather := (
+    slice "name"
+    "description"
+    "dateCreated"
+    "datePublished"
+    "dateModified"
+    "section"
+    "wordCount"
+    "images"
+    "keywords"
+    "type"
+    "url"
+    "audio"
+    "locale"
+    "site_name"
+    "videos"
+    "see_also"
+) -}}
+
+{{- range $dataToGather -}}
+    {{- $gatherType := . -}}
+    {{- with $ctx -}}
+        {{- $data := (partial (printf "helpers/lib/microformat-data/gather-%s" $gatherType) .) -}}
+        {{- $dataScratch.SetInMap "dataGathered" $gatherType $data -}}
+    {{- end -}}
+{{- end -}}
+{{- $dataGathered := $dataScratch.Get "dataGathered" -}}
+{{- return $dataGathered -}}
