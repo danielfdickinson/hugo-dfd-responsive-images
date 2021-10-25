@@ -14,7 +14,7 @@ weight: 10
 
 ## Via Markdown:
 
-![Screenshot of a web page with an aqua theme](screenshot.png)
+![Screenshot of a web page with an aqua theme](featured-screenshot.png)
 
 ## Via figure shortcode:
 
