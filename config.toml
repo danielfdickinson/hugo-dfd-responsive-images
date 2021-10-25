@@ -1,0 +1,26 @@
+copyright = "© 2021 Daniel F. Dickinson"
+homepage = "https://hugo-dfd-responsive-images.wildtechgarden.ca/"
+description = "Hugo theme module for responsive images"
+enableGitInfo = true
+defaultContentLanguage = "en"
+
+# See https://gohugo.io/content-management/multilingual/
+# and https://www.regisphilibert.com/blog/2018/08/hugo-multilingual-part-1-managing-content-translation/
+[languages]
+  [languages.en]
+    languageName = ":en:"
+    languageAltTitle = "English"
+    title = "DFD Responsive Images Hugo Module"
+    weight = 1
+
+[author]
+  name = "Daniel F. Dickinson"
+  homepage = "https://www.danielfdickinson.ca/"
+
+  [[author.authors]]
+    name = "Daniel F. Dickinson"
+    homepage = "https://www.danielfdickinson.ca/"
+
+[module]
+  [[module.imports]]
+    path = "github.com/danielfdickinson/hugo-dfd-link-handling"

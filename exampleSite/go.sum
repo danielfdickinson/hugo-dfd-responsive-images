@@ -1,2 +1,4 @@
-github.com/danielfdickinson/hugo-dfd-demo-site-theme v0.0.0-20211018052754-6c3c2df78d92 h1:20R2PeNuIV2YYtl3cbfrXrh8Ev0eWkKydA8Fy14dHis=
-github.com/danielfdickinson/hugo-dfd-demo-site-theme v0.0.0-20211018052754-6c3c2df78d92/go.mod h1:aEYM9e0YLASf4O+dTqcEMQWT2ntTwaLn0jq4vSypAjY=
+github.com/danielfdickinson/hugo-dfd-demo-site-theme v0.4.0 h1:c2DaViCU9Ki087I+e8qpGBp5fRgeUOurSyBtltyni2s=
+github.com/danielfdickinson/hugo-dfd-demo-site-theme v0.4.0/go.mod h1:w2Ukpe+gR+IfXo+DkM9HVPO+RyzTyIXK90hTZsLWo2w=
+github.com/danielfdickinson/hugo-dfd-metadata-central v0.0.0-20211022192728-d6b4ec370120 h1:vEeFUp0eivZIDOWhVz7Tms0XZxdlHM7Si7BXWUjTlEU=
+github.com/danielfdickinson/hugo-dfd-metadata-central v0.0.0-20211022192728-d6b4ec370120/go.mod h1:uygtPWTIMU1oCMsQnJ/FR/WKU1XblxqKa4mscGUX4fw=
