@@ -10,6 +10,10 @@ A Hugo module for creating and using responsive images wherever images are used.
 
 <https://hugo-dfd-responsive-images.wildtechgarden.ca>
 
+## GitHub Repository
+
+<https://github.com/danielfdickinson/hugo-dfd-responsive-images>
+
 ## Features
 
 * From Hugo content files
