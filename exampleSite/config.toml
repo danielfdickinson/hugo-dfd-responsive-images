@@ -4,6 +4,7 @@ defaultContentLanguage = "en"
 homepage = "https://hugo-dfd-responsive-images.wildtechgarden.ca/"
 enableGitInfo = true
 enableRobotsTXT = true
+summaryLength = 25
 
 [params]
   mainSections = ["post","docs"]
