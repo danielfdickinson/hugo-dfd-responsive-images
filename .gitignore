@@ -4,3 +4,4 @@
 .netlify
 /netlify.log
 node_modules
+_vendor

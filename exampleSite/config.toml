@@ -73,8 +73,6 @@ enableRobotsTXT = true
 
 [module]
   [[module.imports]]
-    ignoreConfig = true
-    ignoreMounts = true
     path = "github.com/danielfdickinson/hugo-dfd-demo-site-theme"
 
     [[module.imports.mounts]]
