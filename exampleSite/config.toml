@@ -101,8 +101,6 @@ summaryLength = 25
       target = "archetypes"
 
   [[module.imports]]
-    ignoreConfig = true
-    ignoreMounts = true
     path = "github.com/danielfdickinson/hugo-dfd-responsive-images"
 
     [[module.imports.mounts]]
