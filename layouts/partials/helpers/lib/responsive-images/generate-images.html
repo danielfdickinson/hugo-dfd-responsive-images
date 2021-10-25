@@ -26,8 +26,13 @@
     {{- if $fullImage -}}
         {{- $fullConvertedImage := $fullImage -}}
 
-        {{- $fullWidth = $inWidth | default $fullImage.Width -}}
-        {{- $fullHeight = $inHeight | default $fullImage.Height -}}
+        {{- $fullWidth = $inWidth | default $fullImage.Width | int -}}
+
+        {{- if ne $inHeight "auto" -}}
+            {{- $fullHeight = $inHeight | default $fullImage.Height | int -}}
+        {{- else -}}
+            {{- $fullHeight = div (mul (int $fullWidth) $fullImage.Height) $fullImage.Width -}}
+        {{- end -}}
 
         {{- if (partial "helpers/lib/responsive-images/is-processable" $fullImage) -}}
 
