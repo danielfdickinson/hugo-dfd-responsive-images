@@ -20,12 +20,10 @@ A Hugo module for creating and using responsive images wherever images are used.
   * via a render-image hook
   * via a shortcode
 * TODO: #6 Cover images
-* TODO: #7 Microformat (e.g. OpenGraph/Twitter) support
+* Microformat (e.g. OpenGraph/Twitter) support (in combination with [DFD Hugo Microformats Module](https://github.com/danielfdickinson/hugo-dfd-microformats) via [DFD Hugo Metadata Module](https://github.com/danielfdickinson/hugo-dfd-metadata-central),
 * Thumbnails (e.g. for blog/taxonomy/HTML sitemap/etc listings)
   * Configurable between thumbnail and full width or height image
   * Sitewide defaults
-  * TODO: Configurable per list page
-  * TODO: Configurable per listed page
 * Fallback for non-resource images
 * Image conversion (e.g. to webp)
 * Allow adding a wrapping link to original size image 
