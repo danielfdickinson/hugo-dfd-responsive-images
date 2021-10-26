@@ -1,5 +1,5 @@
 ---
-title: "Hugo DFD Resposive Images README"
+title: "Hugo DFD Responsive Images README"
 author: Daniel F. Dickinson
 categories:
     - Documentation
